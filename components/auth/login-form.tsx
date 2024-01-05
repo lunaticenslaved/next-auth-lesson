@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { z } from 'zod';
 
@@ -92,6 +93,9 @@ export function LoginForm() {
                   <FormControl>
                     <Input {...field} disabled={isPending} placeholder="******" type="password" />
                   </FormControl>
+                  <Button size="sm" variant="link" asChild className="px-0 font-normal">
+                    <Link href="/auth/reset">Forgot password?</Link>
+                  </Button>
                   <FormMessage />
                 </FormItem>
               )}
