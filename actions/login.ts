@@ -9,7 +9,12 @@ import { LoginSchema } from '@/schemas';
 
 type Values = z.infer<typeof LoginSchema>;
 
-export async function login(values: Values) {
+interface LoginResponse {
+  success?: string;
+  error?: string;
+}
+
+export async function login(values: Values): Promise<LoginResponse> {
   const validateFields = LoginSchema.safeParse(values);
 
   if (!validateFields.success) {

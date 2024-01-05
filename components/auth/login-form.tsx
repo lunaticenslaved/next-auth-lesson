@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSearchParams } from 'next/navigation';
 import { z } from 'zod';
 
 import { login } from '@/actions/login';
@@ -26,6 +27,12 @@ import { CardWrapper } from './card-wrapper';
 type Values = z.infer<typeof LoginSchema>;
 
 export function LoginForm() {
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get('error') === 'OAuthAccountNotLinked'
+      ? 'Email already in use with different provider!'
+      : '';
+
   const form = useForm<Values>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -35,7 +42,7 @@ export function LoginForm() {
   });
 
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<string | undefined>(urlError);
   const [success, setSuccess] = useState<string>();
 
   const { handleSubmit } = form;
@@ -43,8 +50,8 @@ export function LoginForm() {
   const onSubmit = (values: Values) => {
     startTransition(() => {
       login(values).then(data => {
-        setError(data.error);
-        setSuccess(data.success);
+        setError(data?.error);
+        setSuccess(data?.success);
       });
     });
   };
